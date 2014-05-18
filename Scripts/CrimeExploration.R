@@ -2,7 +2,7 @@ library("dplyr")
 library("ggplot2")
 library("reshape2")
 
-#load the data and modify the time value
+#load the data and modify the time values
 crime2012 <- read.csv("Data/crime_incident_data.csv", header=T, sep=",", quote="\"", as.is=T)
 crime2012$reptime <- strptime(paste(crime2012$Report.Date, " ", crime2012$Report.Time, sep=""), "%m/%d/%Y %H:%M:%S")
 crime2012$repdate <- format(crime2012$reptime, "%Y-%m-%d")
@@ -10,8 +10,7 @@ crime2012$repdate <- format(crime2012$reptime, "%Y-%m-%d")
 #load the neighborhood alignment data
 neighborhood.list <- read.csv("Data/alignedlist.csv", header=T, sep="\t", quote="\"", as.is=T)
 
-names(crime2012)
-
+#Create dataframe of total number of crimes grouped by date.
 crimetime <- {crime2012 %.%
   select(Major.Offense.Type, repdate) %.%
   group_by(repdate) %.%
