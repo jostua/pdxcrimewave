@@ -27,8 +27,8 @@ speccrime <- function(type,neigh){
       ret <- {
         crime2012 %.%
                 select(Neighborhood, Major.Offense.Type, repdate) %.%
-                filter(Major.Offense.Type == type, Neighborhood == neigh) %.%
-                group_by(Neighborhood, repdate) %.%
+                filter(Major.Offense.Type %in% type, Neighborhood == neigh) %.%
+                group_by(Neighborhood, Major.Offense.Type, repdate) %.%
                 summarise(Count = n())
       }
       return(ret)

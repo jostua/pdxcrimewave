@@ -15,7 +15,7 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of observations
   sidebarLayout(
   sidebarPanel(
-    selectInput("c.type",
+    checkboxGroupInput("c.type",
               "Listed type of Crime:",
               choices = mot.list,
               selected = "Larceny"

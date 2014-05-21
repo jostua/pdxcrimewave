@@ -11,11 +11,9 @@ library("dplyr")
 
 shinyServer(function(input, output) {
 
-#  TimeSeries.SpecCrime <- reactive({
-#    ggplot(data=speccrime(input$c.type,input$n.loc)) + 
-#    geom_smooth(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Neighborhood, color=Neighborhood)) +
-#    p.theme
-#  })  
+ react.out <- reactive({
+   TimeSeries.SpecCrime <- speccrime(input$c.type,input$n.loc)
+         })
    
 #   output$distPlot <- renderPlot({
 #      
@@ -25,10 +23,11 @@ shinyServer(function(input, output) {
 #     hist(dist)
   
   output$TypePlot <- renderPlot({
+    plot.Data <- speccrime(input$c.type,input$n.loc)
     Splot <- {
-      ggplot(data=speccrime(input$c.type,input$n.loc)) + 
-      geom_point(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Neighborhood, color=Neighborhood)) +
-      geom_smooth(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Neighborhood, color=Neighborhood)) +
+      ggplot(data=plot.Data) + 
+      geom_point(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Major.Offense.Type, color=Major.Offense.Type)) +
+      geom_smooth(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Major.Offense.Type, color=Major.Offense.Type)) +
         labs(x = "TimeSeries", y = "Number of Reports", title="TimeSeries plot of specific crime by specific neighborhood") +
       p.theme
             }
