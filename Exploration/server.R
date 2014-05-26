@@ -27,14 +27,14 @@ shinyServer(function(input, output) {
     Splot <- {
       ggplot(data=plot.Data) + 
       geom_point(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Major.Offense.Type, color=Major.Offense.Type)) +
-      geom_smooth(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Major.Offense.Type, color=Major.Offense.Type)) +
-        labs(x = "TimeSeries", y = "Number of Reports", title="TimeSeries plot of specific crime by specific neighborhood") +
+      geom_smooth(aes(x=strptime(repdate, "%Y-%m-%d"), y=Count, group=Major.Offense.Type, color=repyear)) +
+      labs(x = "TimeSeries", y = "Number of Reports", title="TimeSeries plot of specific crime by specific neighborhood") +
       p.theme
             }
     print(Splot)
   })
   output$MapPlot <- renderPlot({
-    neighborhood.num <- merge(neighborhood.list, c.neigh(input$c.type), by.x="crimeneighbor", by.y="Neighborhood", incomparables="0")
+    neighborhood.num <- merge(neighborhood.list, c.neigh(input$c.type,input$c.year), by.x="crimeneighbor", by.y="Neighborhood", incomparables="0")
     neighborhood.num$Count[neighborhood.num$Count == "NA"] <- 0
     pdxmap.poly@data=merge(pdxmap.poly@data,neighborhood.num,by.x='NAME',by.y='mapneighbor', all.x=T, sort=F)
     nnames <- pdxmap.poly$NAME
