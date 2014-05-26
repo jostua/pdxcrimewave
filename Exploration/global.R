@@ -9,6 +9,9 @@
 library("shiny")
 library("dplyr")
 library("ggplot2")
+library("rgdal")
+library("sp")
+library("maptools")
 
 #Load in the crime data and munge time values for time-series fields.
 crime2012 <- read.csv("../Data/crime_incident_data.csv", header=T, sep=",", quote="\"", as.is=T)
@@ -33,4 +36,21 @@ speccrime <- function(type,neigh){
       }
       return(ret)
 }
+
+c.neigh <- function(type){
+  ret <- {
+    crime2012 %.%
+    select(Neighborhood, Major.Offense.Type) %.%
+    filter(Major.Offense.Type %in% type) %.%
+    group_by(Neighborhood) %.%
+    summarise(Count = n())
+  }
+  return(ret)
+}
+
+#Load the basic Polymap and neighborhood data
+pdxmap.poly <- readShapePoly("../Data/ShapeFiles/Neighborhoods_pdx.shp")
+neighborhood.list <- read.csv("../Data/alignedlist.csv", header=T, sep="\t", quote="\"", as.is=T)
+
+
 

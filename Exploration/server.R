@@ -33,6 +33,16 @@ shinyServer(function(input, output) {
             }
     print(Splot)
   })
+  output$MapPlot <- renderPlot({
+    neighborhood.num <- merge(neighborhood.list, c.neigh(input$c.type), by.x="crimeneighbor", by.y="Neighborhood", incomparables="0")
+    neighborhood.num$Count[neighborhood.num$Count == "NA"] <- 0
+    pdxmap.poly@data=merge(pdxmap.poly@data,neighborhood.num,by.x='NAME',by.y='mapneighbor', all.x=T, sort=F)
+    nnames <- pdxmap.poly$NAME
+    nnamesLabel <- 1:length(pdxmap.poly$NAME)
+    pdxmap.poly$Count[is.na(pdxmap.poly$Count)] <- 0
+    plot(pdxmap.poly,col=rgb(red = 0, green = 0, blue = 1-(pdxmap.poly@data$Count/max(pdxmap.poly@data$Count)), alpha=pdxmap.poly@data$Count/max(pdxmap.poly@data$Count)))
+    
+  })
   output$SelectedN <- renderText({
     paste("You have selected: ", input$n.loc)
   })

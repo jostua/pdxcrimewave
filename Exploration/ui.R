@@ -15,23 +15,31 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of observations
   sidebarLayout(
   sidebarPanel(
-    checkboxGroupInput("c.type",
-              "Listed type of Crime:",
-              choices = mot.list,
-              selected = "Larceny"
-              ),
     selectInput("n.loc",
                 "Neighborhood Listing:",
                 choices = nb.list,
-                selected = "KERNS")
+                selected = "KERNS"),
+    checkboxGroupInput("c.type",
+                       "Listed type of Crime:",
+                       choices = mot.list,
+                       selected = "Larceny"
+    )
   ),
   
   # Show a plot of the generated distribution
   mainPanel(
     #output$TypePlot
-    textOutput("SelectedC"),
-    textOutput("SelectedN"),
-    plotOutput(print("TypePlot"))
+    tabsetPanel(
+      tabPanel(
+        "Map Output",
+        plotOutput(print("MapPlot"))
+        ),
+      tabPanel(
+        "Average Graphs",
+        plotOutput(print("TypePlot"))
+        )
+    
+    )  
   )
   )
 ))
