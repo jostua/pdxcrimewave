@@ -3,9 +3,9 @@ library("ggplot2")
 library("reshape2")
 
 #load the data and modify the time values
-crime2012 <- read.csv("Data/crime_incident_data.csv", header=T, sep=",", quote="\"", as.is=T)
-crime2012$reptime <- strptime(paste(crime2012$Report.Date, " ", crime2012$Report.Time, sep=""), "%m/%d/%Y %H:%M:%S")
-crime2012$repdate <- format(crime2012$reptime, "%Y-%m-%d")
+#crime2012 <- read.csv("Data/crime_incident_data.csv", header=T, sep=",", quote="\"", as.is=T)
+#crime2012$reptime <- strptime(paste(crime2012$Report.Date, " ", crime2012$Report.Time, sep=""), "%m/%d/%Y %H:%M:%S")
+#crime2012$repdate <- format(crime2012$reptime, "%Y-%m-%d")
 crime.allyears <- read.csv("Data/CrimeSeries.csv", header=T, sep=",", quote="\"", as.is=T)
 crime.allyears$reptime <- strptime(paste(crime.allyears$Report.Date, " ", crime.allyears$Report.Time, sep=""), "%m/%d/%Y %H:%M:%S")
 crime.allyears$repdate <- format(crime.allyears$reptime, "%Y-%m-%d")

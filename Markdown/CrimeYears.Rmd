@@ -1,0 +1,62 @@
+Consecutive Yearly Maps
+========================================================
+
+Each consecuative year of reported crime in Portland is shown here. This will help me to determine if there is a clear pattern in the crime levels between each neighborhood.
+
+```{r PrepareEverything, echo=FALSE, results='hide', warning=FALSE, message=FALSE, error=FALSE}
+#Load each package:
+library("dplyr")
+library("ggplot2")
+library("reshape2")
+library("rgdal")
+library("sp")
+library("maptools")
+
+#Load the crime data
+crime.reps <- read.csv("../Data/CrimeSeries.csv", header=T, sep=",", quote="\"", as.is=T)
+crime.reps$reptime <- strptime(paste(crime.reps$Report.Date, " ", crime.reps$Report.Time, sep=""), "%m/%d/%Y %H:%M:%S")
+crime.reps$repdate <- format(crime.reps$reptime, "%Y-%m-%d")
+crime.reps$repyear <- format(crime.reps$reptime, "%Y")
+
+neighborhood.list <- read.csv("../Data/alignedlist.csv", header=T, sep="\t", quote="\"", as.is=T)
+
+#Load the Map data
+pdxmap.poly <- readShapePoly("../Data/ShapeFiles/Neighborhoods_pdx.shp")
+
+#Prepare the functions
+c.neigh <- function(year){
+  ret <- {
+    crime.reps %.%
+    select(Neighborhood, Major.Offense.Type, repyear) %.%
+    filter(repyear %in% year) %.%
+    group_by(Neighborhood) %.%
+    summarise(Count = n())
+  }
+  return(ret)
+}
+
+plot.map <- function(year){
+  neighbor.num <- merge(neighborhood.list, c.neigh(year), by.x="crimeneighbor", by.y="Neighborhood", incomparables="0")
+  neighbor.num$Count[neighbor.num$Count == "NA"] <- 0
+  pdxmap.poly@data=merge(pdxmap.poly@data,neighbor.num,by.x='NAME',by.y='mapneighbor', all.x=T, sort=F)
+  nnames <- pdxmap.poly$NAME
+  nnamesLabel <- 1:length(pdxmap.poly$NAME)
+  pdxmap.poly$Count[is.na(pdxmap.poly$Count)] <- 0
+  plot(pdxmap.poly,col=rgb(red = 0, green = 0, blue = 1-(pdxmap.poly@data$Count/max(pdxmap.poly@data$Count)), alpha=pdxmap.poly@data$Count/max(pdxmap.poly@data$Count)))
+}
+```
+
+Maps shown by year:
+
+```{r fig.width=7, fig.height=6, results='hide'}
+plot.map(2004)
+plot.map(2005)
+plot.map(2006)
+plot.map(2007)
+plot.map(2008)
+plot.map(2009)
+plot.map(2010)
+plot.map(2011)
+plot.map(2012)
+```
+
